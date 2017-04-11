@@ -27,13 +27,15 @@ import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
 
+    /*
+     * UI
+     */
     // 스크롤뷰
     NestedScrollView nsv_main;
     // 리싸이클러뷰
     RecyclerView rv_lecture;
-
-    // 리싸이클러뷰 아이템 리스트
-    ResLectureList resLectureList;
+    // 내 이름
+    TextView tv_student_name;
 
     /*
      * 어댑터 및 매니저
@@ -43,6 +45,12 @@ public class HomeActivity extends AppCompatActivity {
     // 리싸이클러뷰 레아이웃 매니저
     LinearLayoutManager lectureLinearLayoutManager;
 
+    /*
+     * 기타
+     */
+    // 리싸이클러뷰 아이템 리스트
+    ResLectureList resLectureList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +58,10 @@ public class HomeActivity extends AppCompatActivity {
 
         nsv_main = (NestedScrollView) findViewById(R.id.nsv_main);
         rv_lecture = (RecyclerView) findViewById(R.id.rv_lecture);
+        tv_student_name = (TextView) findViewById(R.id.tv_student_name);
+        // 로그인 사용자 이름 표시
+        tv_student_name.setText(AccountMange.getInstance().student_name + " 님");
+
         lectureAdapter = new LectureAdapter();
         // 리니어레이아웃 매니저
         lectureLinearLayoutManager = new LinearLayoutManager(this);

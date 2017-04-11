@@ -12,7 +12,9 @@ import com.jmdroid.manageattendance.accout.AccountMange;
 import com.jmdroid.manageattendance.dto.LoginDTO;
 import com.jmdroid.manageattendance.network.reqmodel.ReqHeader;
 import com.jmdroid.manageattendance.network.reqmodel.ReqLogin;
+import com.jmdroid.manageattendance.network.reqmodel.ReqMyInfo;
 import com.jmdroid.manageattendance.network.resmodel.ResBasic;
+import com.jmdroid.manageattendance.network.resmodel.ResMyInfo;
 import com.jmdroid.manageattendance.retrofit.RetrofitGenterator;
 
 import retrofit2.Call;
@@ -64,9 +66,8 @@ public class LoginActivity extends AppCompatActivity {
                         if (response.body().getMsg().contains("성공")) {
                             AccountMange.getInstance().student_id = et_login_id.getText().toString();
 
-                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                            startActivity(intent);
-                            finish();
+                            // 내 정보 조회
+                            callNetMyInfo();
                         }
                     } else {
                         // 결과값 없음
@@ -77,8 +78,47 @@ public class LoginActivity extends AppCompatActivity {
                     Log.i("RES ERR", response.message().toString());
                 }
             }
+
             @Override
             public void onFailure(Call<ResBasic> call, Throwable t) {
+                // 통신 실패
+                Log.i("RES FAIL", t.getMessage().toString());
+            }
+        });
+    }
+
+    public void callNetMyInfo() {
+
+        ReqHeader reqHeader = new ReqHeader(
+                "MyInfo"
+        );
+        ReqMyInfo reqMyInfo = new ReqMyInfo(reqHeader, AccountMange.getInstance().student_id);
+
+        Call<ResMyInfo> NetMyInfo = RetrofitGenterator.getInstance().getRetrofitImpFactory().NetMyInfo(reqMyInfo);
+        NetMyInfo.enqueue(new Callback<ResMyInfo>() {
+            @Override
+            public void onResponse(Call<ResMyInfo> call, Response<ResMyInfo> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null && response.body().getBody() != null) {
+                        // 통신 성공
+                        Log.i("RES SUC", response.body().getBody().toString());
+                        AccountMange.getInstance().student_name = response.body().getBody().get(0).getStudent_name().toString();
+
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        // 결과값 없음
+                        Log.i("RES NULL", response.message().toString());
+                    }
+                } else {
+                    // 결과값 실패
+                    Log.i("RES ERR", response.message().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResMyInfo> call, Throwable t) {
                 // 통신 실패
                 Log.i("RES FAIL", t.getMessage().toString());
             }

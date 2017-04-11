@@ -9,6 +9,7 @@ public class AccountMange {
     }
 
     public String student_id;
+    public String student_name;
 }
 
 
