@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/Users/jimin/Project/Android/ManageAttendance/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="510aa6efc159983dfbffa676a0dae37568c0a46f">
+        <dex dex="/Users/jimin/Project/Android/ManageAttendance/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_2a9b199a0e8bbaf204d9c439c77906efeac84bdc/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jimin/Project/Android/ManageAttendance/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="147d3b73cc6ccb4cc5198322bb0d666adab879dd">
+        <dex dex="/Users/jimin/Project/Android/ManageAttendance/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_925f81b90bc26d01142152cda0001887388d819f/classes.dex" />
+    </item>
+
+</items>

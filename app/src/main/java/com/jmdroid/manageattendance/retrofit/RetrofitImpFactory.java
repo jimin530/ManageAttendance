@@ -5,6 +5,7 @@ import com.jmdroid.manageattendance.network.reqmodel.ReqLectureList;
 import com.jmdroid.manageattendance.network.reqmodel.ReqLogin;
 import com.jmdroid.manageattendance.network.reqmodel.ReqSignup;
 import com.jmdroid.manageattendance.network.resmodel.ResBasic;
+import com.jmdroid.manageattendance.network.resmodel.ResLectureList;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -22,6 +23,6 @@ public interface RetrofitImpFactory {
 
     // 강의 리스트 가져오기
     @POST("/ma_lecturelist")
-    Call<ResBasic> NetLectureList(@Body ReqLectureList reqLectureList);
+    Call<ResLectureList> NetLectureList(@Body ReqLectureList reqLectureList);
 
 }

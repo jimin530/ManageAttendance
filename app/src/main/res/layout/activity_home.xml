@@ -16,11 +16,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Button
-                android:onClick="getLectureList"
-                android:layout_width="100dp"
-                android:layout_height="100dp" />
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_lecture"
                 android:layout_width="match_parent"
