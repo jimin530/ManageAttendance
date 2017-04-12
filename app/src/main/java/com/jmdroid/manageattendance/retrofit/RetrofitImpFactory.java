@@ -1,6 +1,7 @@
 package com.jmdroid.manageattendance.retrofit;
 
 
+import com.jmdroid.manageattendance.network.reqmodel.ReqChangeState;
 import com.jmdroid.manageattendance.network.reqmodel.ReqLectureList;
 import com.jmdroid.manageattendance.network.reqmodel.ReqLogin;
 import com.jmdroid.manageattendance.network.reqmodel.ReqMyInfo;
@@ -30,5 +31,9 @@ public interface RetrofitImpFactory {
     // 내 정보 가져오기
     @POST("/ma_myinfo")
     Call<ResMyInfo> NetMyInfo(@Body ReqMyInfo reqMyInfo);
+
+    // 출석정보 변경하기
+    @POST("/ma_changestate")
+    Call<ResBasic> NetChangeState(@Body ReqChangeState reqChangeState);
 
 }

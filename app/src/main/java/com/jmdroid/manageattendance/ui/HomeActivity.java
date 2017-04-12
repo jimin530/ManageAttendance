@@ -16,9 +16,12 @@ import android.widget.Toast;
 
 import com.jmdroid.manageattendance.R;
 import com.jmdroid.manageattendance.accout.AccountMange;
+import com.jmdroid.manageattendance.dto.ReqChangeStateDTO;
 import com.jmdroid.manageattendance.dto.ReqLectureListDTO;
+import com.jmdroid.manageattendance.network.reqmodel.ReqChangeState;
 import com.jmdroid.manageattendance.network.reqmodel.ReqHeader;
 import com.jmdroid.manageattendance.network.reqmodel.ReqLectureList;
+import com.jmdroid.manageattendance.network.resmodel.ResBasic;
 import com.jmdroid.manageattendance.network.resmodel.ResLectureList;
 import com.jmdroid.manageattendance.retrofit.RetrofitGenterator;
 
@@ -72,8 +75,8 @@ public class HomeActivity extends AppCompatActivity {
         // 스크롤뷰 부드럽게
         rv_lecture.setNestedScrollingEnabled(false);
 
-        // 데이터 통신
-        getLectureList();
+        // 데이터 통신(강의 정보 받아오기)
+        callNetLectureList();
 
     }
 
@@ -141,13 +144,14 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(HomeActivity.this, resLectureList.getBody().get(position).getBeacon_id(), Toast.LENGTH_SHORT).show();
+                    callNetChangeState("170412", AccountMange.getInstance().student_id, resLectureList.getBody().get(position).getLecture_code());
                 }
             });
         }
 
     }
 
-    public void getLectureList() {
+    public void callNetLectureList() {
         ReqHeader reqHeader = new ReqHeader(
                 "lecturelist"
         );
@@ -155,13 +159,8 @@ public class HomeActivity extends AppCompatActivity {
                 "170412",
                 AccountMange.getInstance().student_id
         );
-
         ReqLectureList reqLectureList = new ReqLectureList(reqHeader, reqLectureListDTO);
 
-        callNetLectureList(reqLectureList);
-    }
-
-    public void callNetLectureList(ReqLectureList reqLectureList) {
         Call<ResLectureList> NetLectureList = RetrofitGenterator.getInstance().getRetrofitImpFactory().NetLectureList(reqLectureList);
         NetLectureList.enqueue(new Callback<ResLectureList>() {
             @Override
@@ -186,6 +185,48 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResLectureList> call, Throwable t) {
+                // 통신 실패
+                Log.i("RES FAIL", t.getMessage().toString());
+            }
+        });
+    }
+
+    public void callNetChangeState(String date, String student_id, String lecture_code) {
+        ReqHeader reqHeader = new ReqHeader(
+                "changestate"
+        );
+        ReqChangeStateDTO reqChangeStateDTO = new ReqChangeStateDTO(
+                date,
+                student_id,
+                lecture_code,
+                "출석"
+        );
+        ReqChangeState reqChangeState = new ReqChangeState(reqHeader, reqChangeStateDTO);
+
+        Call<ResBasic> NetChangeState = RetrofitGenterator.getInstance().getRetrofitImpFactory().NetChangeState(reqChangeState);
+        NetChangeState.enqueue(new Callback<ResBasic>() {
+            @Override
+            public void onResponse(Call<ResBasic> call, Response<ResBasic> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null && response.body().getMsg() != null) {
+                        // 통신 성공
+                        Log.i("RES SUC", response.body().getMsg());
+                        if (response.body().getMsg().contains("성공")) {
+                            // 다시 리스트 초기화
+                            callNetLectureList();
+                        }
+                    } else {
+                        // 결과값 없음
+                        Log.i("RES NULL", response.message().toString());
+                    }
+                } else {
+                    // 결과값 실패
+                    Log.i("RES ERR", response.message().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResBasic> call, Throwable t) {
                 // 통신 실패
                 Log.i("RES FAIL", t.getMessage().toString());
             }
