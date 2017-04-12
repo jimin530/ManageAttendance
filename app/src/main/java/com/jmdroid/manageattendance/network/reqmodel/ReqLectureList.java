@@ -1,16 +1,18 @@
 package com.jmdroid.manageattendance.network.reqmodel;
 
+import com.jmdroid.manageattendance.dto.ReqLectureListDTO;
+
 public class ReqLectureList {
     ReqHeader header;
-    String student_id;
+    ReqLectureListDTO body;
 
     public ReqLectureList() {
     }
 
-    public ReqLectureList(ReqHeader header, String student_id) {
+    public ReqLectureList(ReqHeader header, ReqLectureListDTO body) {
 
         this.header = header;
-        this.student_id = student_id;
+        this.body = body;
     }
 
     public ReqHeader getHeader() {
@@ -22,19 +24,19 @@ public class ReqLectureList {
         this.header = header;
     }
 
-    public String getStudent_id() {
-        return student_id;
+    public ReqLectureListDTO getBody() {
+        return body;
     }
 
-    public void setStudent_id(String student_id) {
-        this.student_id = student_id;
+    public void setBody(ReqLectureListDTO body) {
+        this.body = body;
     }
 
     @Override
     public String toString() {
         return "ReqLectureList{" +
                 "header=" + header +
-                ", student_id='" + student_id + '\'' +
+                ", body=" + body +
                 '}';
     }
 }

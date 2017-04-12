@@ -10,17 +10,19 @@ public class LectureListDTO {
     String lecture_time;
     String teacher_name;
     String beacon_id;
+    String att_state;
 
     public LectureListDTO() {
     }
 
-    public LectureListDTO(String lecture_code, String lecture_name, String lecture_time, String teacher_name, String beacon_id) {
+    public LectureListDTO(String lecture_code, String lecture_name, String lecture_time, String teacher_name, String beacon_id, String att_state) {
 
         this.lecture_code = lecture_code;
         this.lecture_name = lecture_name;
         this.lecture_time = lecture_time;
         this.teacher_name = teacher_name;
         this.beacon_id = beacon_id;
+        this.att_state = att_state;
     }
 
     public String getLecture_code() {
@@ -64,6 +66,14 @@ public class LectureListDTO {
         this.beacon_id = beacon_id;
     }
 
+    public String getAtt_state() {
+        return att_state;
+    }
+
+    public void setAtt_state(String att_state) {
+        this.att_state = att_state;
+    }
+
     @Override
     public String toString() {
         return "LectureListDTO{" +
@@ -72,6 +82,7 @@ public class LectureListDTO {
                 ", lecture_time='" + lecture_time + '\'' +
                 ", teacher_name='" + teacher_name + '\'' +
                 ", beacon_id='" + beacon_id + '\'' +
+                ", att_state='" + att_state + '\'' +
                 '}';
     }
 }

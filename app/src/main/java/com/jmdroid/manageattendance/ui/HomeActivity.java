@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.jmdroid.manageattendance.R;
 import com.jmdroid.manageattendance.accout.AccountMange;
+import com.jmdroid.manageattendance.dto.ReqLectureListDTO;
 import com.jmdroid.manageattendance.network.reqmodel.ReqHeader;
 import com.jmdroid.manageattendance.network.reqmodel.ReqLectureList;
 import com.jmdroid.manageattendance.network.resmodel.ResLectureList;
@@ -87,11 +88,20 @@ public class HomeActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(PostHolder holder, int position) {
+
+            String lecture_time = resLectureList.getBody().get(position).getLecture_time();
+            lecture_time = lecture_time.split("/")[0].substring(0, 2) + "시 "
+                    + lecture_time.split("/")[0].substring(2, 4) + "분"
+                    + " ~ "
+                    + lecture_time.split("/")[1].substring(0, 2) + "시 "
+                    + lecture_time.split("/")[1].substring(2, 4) + "분";
+
             holder.bindOnPost(
                     position,
                     resLectureList.getBody().get(position).getLecture_name(),
                     resLectureList.getBody().get(position).getTeacher_name(),
-                    resLectureList.getBody().get(position).getLecture_time()
+                    lecture_time,
+                    resLectureList.getBody().get(position).getAtt_state()
             );
         }
 
@@ -107,6 +117,7 @@ public class HomeActivity extends AppCompatActivity {
         TextView tv_lecture_name;
         TextView tv_teacher_name;
         TextView tv_lecture_time;
+        TextView tv_att_state;
         ImageButton btn_lecture_info;
 
         // 뷰로부터 컴포넌트를 획득
@@ -115,14 +126,15 @@ public class HomeActivity extends AppCompatActivity {
             tv_lecture_name = (TextView) itemView.findViewById(R.id.tv_lecture_name);
             tv_teacher_name = (TextView) itemView.findViewById(R.id.tv_teacher_name);
             tv_lecture_time = (TextView) itemView.findViewById(R.id.tv_lecture_time);
+            tv_att_state = (TextView) itemView.findViewById(R.id.tv_att_state);
             btn_lecture_info = (ImageButton) itemView.findViewById(R.id.btn_lecture_info);
         }
 
-        public void bindOnPost(final int position, String lecture_name, String teacher_name, String lecture_time) {
+        public void bindOnPost(final int position, String lecture_name, String teacher_name, String lecture_time, String att_state) {
             tv_lecture_name.setText(lecture_name);
             tv_teacher_name.setText(teacher_name);
             tv_lecture_time.setText(lecture_time);
-
+            tv_att_state.setText(att_state);
 
             // 버튼은 클릭이벤트를 같이
             btn_lecture_info.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +151,12 @@ public class HomeActivity extends AppCompatActivity {
         ReqHeader reqHeader = new ReqHeader(
                 "lecturelist"
         );
-        ReqLectureList reqLectureList = new ReqLectureList(reqHeader, AccountMange.getInstance().student_id);
+        ReqLectureListDTO reqLectureListDTO = new ReqLectureListDTO(
+                "170412",
+                AccountMange.getInstance().student_id
+        );
+
+        ReqLectureList reqLectureList = new ReqLectureList(reqHeader, reqLectureListDTO);
 
         callNetLectureList(reqLectureList);
     }
