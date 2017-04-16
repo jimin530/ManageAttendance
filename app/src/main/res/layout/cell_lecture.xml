@@ -51,10 +51,10 @@
                     android:layout_weight="1" />
 
                 <ImageView
-                android:layout_weight="0"
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/basic_black" />
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:background="@color/basic_black" />
 
                 <TextView
                     android:id="@+id/tv_lecture_time"
@@ -63,9 +63,9 @@
                     android:layout_weight="2" />
 
                 <ImageView
-                    android:layout_weight="0"
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="0"
                     android:background="@color/basic_black" />
 
                 <TextView
@@ -100,5 +100,5 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="8dp"
-        android:background="@color/basic_white"/>
+        android:background="@color/basic_white" />
 </LinearLayout>
