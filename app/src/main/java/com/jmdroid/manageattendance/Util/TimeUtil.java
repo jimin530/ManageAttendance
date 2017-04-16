@@ -35,6 +35,18 @@ public class TimeUtil {
         simpleDateFormat = new SimpleDateFormat("mm");
         TimeUtil.getInstance().nowMinute = simpleDateFormat.format(date);
     }
+
+    public boolean canAtt(String lecture_time, String nowHour, String nowMinute) {
+        int startHour = Integer.parseInt(lecture_time.substring(0, 2));
+        int startMinute = Integer.parseInt(lecture_time.substring(4, 6));
+
+        // 출석 체크 가능한 시간
+        if (Integer.parseInt(nowHour) <= startHour
+                && Integer.parseInt(nowMinute) <= startMinute + 15) {
+            return true;
+        }
+        return false;
+    }
 }
 
 

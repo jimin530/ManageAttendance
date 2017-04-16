@@ -82,6 +82,7 @@
             android:background="@color/basic_black" />
 
         <ImageButton
+            android:background="@mipmap/ic_launcher"
             android:id="@+id/btn_lecture_info"
             android:layout_width="50dp"
             android:layout_height="50dp"

@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.jmdroid.manageattendance.R;
-import com.jmdroid.manageattendance.accout.AccountMange;
+import com.jmdroid.manageattendance.accout.AccountManage;
 import com.jmdroid.manageattendance.dto.LoginDTO;
 import com.jmdroid.manageattendance.network.reqmodel.ReqHeader;
 import com.jmdroid.manageattendance.network.reqmodel.ReqLogin;
@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                         // 통신 성공
                         Log.i("RES SUC", response.body().getMsg());
                         if (response.body().getMsg().contains("성공")) {
-                            AccountMange.getInstance().student_id = et_login_id.getText().toString();
+                            AccountManage.getInstance().student_id = et_login_id.getText().toString();
 
                             // 내 정보 조회
                             callNetMyInfo();
@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         ReqHeader reqHeader = new ReqHeader(
                 "MyInfo"
         );
-        ReqMyInfo reqMyInfo = new ReqMyInfo(reqHeader, AccountMange.getInstance().student_id);
+        ReqMyInfo reqMyInfo = new ReqMyInfo(reqHeader, AccountManage.getInstance().student_id);
 
         Call<ResMyInfo> NetMyInfo = RetrofitGenterator.getInstance().getRetrofitImpFactory().NetMyInfo(reqMyInfo);
         NetMyInfo.enqueue(new Callback<ResMyInfo>() {
@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.body() != null && response.body().getBody() != null) {
                         // 통신 성공
                         Log.i("RES SUC", response.body().getBody().toString());
-                        AccountMange.getInstance().student_name = response.body().getBody().get(0).getStudent_name().toString();
+                        AccountManage.getInstance().student_name = response.body().getBody().get(0).getStudent_name().toString();
 
                         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                         startActivity(intent);

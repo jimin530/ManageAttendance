@@ -15,7 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jmdroid.manageattendance.R;
-import com.jmdroid.manageattendance.accout.AccountMange;
+import com.jmdroid.manageattendance.Util.TimeUtil;
+import com.jmdroid.manageattendance.accout.AccountManage;
 import com.jmdroid.manageattendance.dto.ReqChangeStateDTO;
 import com.jmdroid.manageattendance.dto.ReqLectureListDTO;
 import com.jmdroid.manageattendance.network.reqmodel.ReqChangeState;
@@ -64,7 +65,7 @@ public class HomeActivity extends AppCompatActivity {
         rv_lecture = (RecyclerView) findViewById(R.id.rv_lecture);
         tv_student_name = (TextView) findViewById(R.id.tv_student_name);
         // 로그인 사용자 이름 표시
-        tv_student_name.setText(AccountMange.getInstance().student_name + " 님");
+        tv_student_name.setText(AccountManage.getInstance().student_name + " 님");
 
         lectureAdapter = new LectureAdapter();
         // 리니어레이아웃 매니저
@@ -77,7 +78,6 @@ public class HomeActivity extends AppCompatActivity {
 
         // 데이터 통신(강의 정보 받아오기)
         callNetLectureList();
-
     }
 
     // 리싸이클러뷰 어댑터
@@ -133,18 +133,67 @@ public class HomeActivity extends AppCompatActivity {
             btn_lecture_info = (ImageButton) itemView.findViewById(R.id.btn_lecture_info);
         }
 
-        public void bindOnPost(final int position, String lecture_name, String teacher_name, String lecture_time, String att_state) {
+        public void bindOnPost(final int position, final String lecture_name, String teacher_name, final String lecture_time, String att_state) {
+            // 현재 시간 가져오기
+            TimeUtil.getInstance().setTime();
+
             tv_lecture_name.setText(lecture_name);
             tv_teacher_name.setText(teacher_name);
             tv_lecture_time.setText(lecture_time);
             tv_att_state.setText(att_state);
 
+            /*// 출석보다 이른 시간일 때
+            int startHour = Integer.parseInt(lecture_time.substring(0, 2));
+            if (Integer.parseInt(TimeUtil.getInstance().nowHour) < startHour) {
+                tv_att_state.setText(att_state);
+                btn_lecture_info.setEnabled(true);
+            }
+            // 출석 가능한 시간일 때
+            else if (TimeUtil.getInstance().canAtt(lecture_time, TimeUtil.getInstance().nowHour, TimeUtil.getInstance().nowMinute)) {
+                tv_att_state.setText(att_state);
+                btn_lecture_info.setEnabled(true);
+            }
+            // 출석 불가능한 시간일 때
+            else {
+                Log.i("확인", "else if 결석");
+                tv_att_state.setText("결석");
+                btn_lecture_info.setEnabled(false);
+//                callNetChangeState(TimeUtil.getInstance().nowDate, AccountManage.getInstance().student_id, resLectureList.getBody().get(position).getLecture_code(), "결석");
+            }*/
+
             // 버튼은 클릭이벤트를 같이
             btn_lecture_info.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(HomeActivity.this, resLectureList.getBody().get(position).getBeacon_id(), Toast.LENGTH_SHORT).show();
-                    callNetChangeState("170412", AccountMange.getInstance().student_id, resLectureList.getBody().get(position).getLecture_code());
+                    //Toast.makeText(HomeActivity.this, resLectureList.getBody().get(position).getBeacon_id(), Toast.LENGTH_SHORT).show();
+                    int startHour = Integer.parseInt(lecture_time.substring(0, 2));
+                    int startMinute = Integer.parseInt(lecture_time.substring(4, 6));
+                    Log.i("시간 확인", TimeUtil.getInstance().nowHour + "");
+                    // 현재 시간 가져오기
+                    TimeUtil.getInstance().setTime();
+
+                    // 출석 시간보다 이른 시간인 경우
+                    if (Integer.parseInt(TimeUtil.getInstance().nowHour) <= startHour && Integer.parseInt(TimeUtil.getInstance().nowMinute) < startMinute) {
+                        Toast.makeText(HomeActivity.this, "출석 가능 시간이 아닙니다.", Toast.LENGTH_SHORT).show();
+                    }
+                    // 시작 시간(시)과 현재 시간(시)이 같고, 시작 시간(분) + 10 => 현재 시간(분)일 때 출석
+                    else if (Integer.parseInt(TimeUtil.getInstance().nowHour) == startHour
+                            && Integer.parseInt(TimeUtil.getInstance().nowMinute) <= startMinute + 10) {
+                        Log.i("확인", "else if 1");
+                        callNetChangeState(TimeUtil.getInstance().nowDate, AccountManage.getInstance().student_id, resLectureList.getBody().get(position).getLecture_code(), "출석");
+                    }
+                    // 10초과 15분 이하로 출석했을 때 지각
+                    else if (Integer.parseInt(TimeUtil.getInstance().nowHour) == startHour
+                            && Integer.parseInt(TimeUtil.getInstance().nowMinute) > startMinute + 10
+                            && Integer.parseInt(TimeUtil.getInstance().nowMinute) <= startMinute + 15) {
+                        Log.i("확인", "else if 2");
+                        callNetChangeState(TimeUtil.getInstance().nowDate, AccountManage.getInstance().student_id, resLectureList.getBody().get(position).getLecture_code(), "지각");
+                    }
+                    // 나머지 결석
+                    else {
+                        Log.i("확인", "else if 3");
+                        callNetChangeState(TimeUtil.getInstance().nowDate, AccountManage.getInstance().student_id, resLectureList.getBody().get(position).getLecture_code(), "결석");
+                    }
                 }
             });
         }
@@ -152,12 +201,13 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void callNetLectureList() {
+        TimeUtil.getInstance().setTime();
         ReqHeader reqHeader = new ReqHeader(
                 "lecturelist"
         );
         ReqLectureListDTO reqLectureListDTO = new ReqLectureListDTO(
-                "170412",
-                AccountMange.getInstance().student_id
+                TimeUtil.getInstance().nowDate,
+                AccountManage.getInstance().student_id
         );
         ReqLectureList reqLectureList = new ReqLectureList(reqHeader, reqLectureListDTO);
 
@@ -191,7 +241,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    public void callNetChangeState(String date, String student_id, String lecture_code) {
+    public void callNetChangeState(String date, String student_id, String lecture_code, String state) {
         ReqHeader reqHeader = new ReqHeader(
                 "changestate"
         );
@@ -199,7 +249,7 @@ public class HomeActivity extends AppCompatActivity {
                 date,
                 student_id,
                 lecture_code,
-                "출석"
+                state
         );
         ReqChangeState reqChangeState = new ReqChangeState(reqHeader, reqChangeStateDTO);
 
