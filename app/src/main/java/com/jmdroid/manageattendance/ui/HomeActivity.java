@@ -114,6 +114,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    public static ImageButton btn_lecture_info;
     // 홀더
     public class PostHolder extends RecyclerView.ViewHolder {
 
@@ -121,7 +122,7 @@ public class HomeActivity extends AppCompatActivity {
         TextView tv_teacher_name;
         TextView tv_lecture_time;
         TextView tv_att_state;
-        ImageButton btn_lecture_info;
+        //ImageButton btn_lecture_info;
 
         // 뷰로부터 컴포넌트를 획득
         public PostHolder(View itemView) {
@@ -142,57 +143,25 @@ public class HomeActivity extends AppCompatActivity {
             tv_lecture_time.setText(lecture_time);
             tv_att_state.setText(att_state);
 
-            /*// 출석보다 이른 시간일 때
-            int startHour = Integer.parseInt(lecture_time.substring(0, 2));
-            if (Integer.parseInt(TimeUtil.getInstance().nowHour) < startHour) {
-                tv_att_state.setText(att_state);
-                btn_lecture_info.setEnabled(true);
-            }
-            // 출석 가능한 시간일 때
-            else if (TimeUtil.getInstance().canAtt(lecture_time, TimeUtil.getInstance().nowHour, TimeUtil.getInstance().nowMinute)) {
-                tv_att_state.setText(att_state);
-                btn_lecture_info.setEnabled(true);
-            }
-            // 출석 불가능한 시간일 때
-            else {
-                Log.i("확인", "else if 결석");
-                tv_att_state.setText("결석");
+            if (!att_state.equals("미출석")) {
                 btn_lecture_info.setEnabled(false);
-//                callNetChangeState(TimeUtil.getInstance().nowDate, AccountManage.getInstance().student_id, resLectureList.getBody().get(position).getLecture_code(), "결석");
-            }*/
+            }
 
             // 버튼은 클릭이벤트를 같이
             btn_lecture_info.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //Toast.makeText(HomeActivity.this, resLectureList.getBody().get(position).getBeacon_id(), Toast.LENGTH_SHORT).show();
-                    int startHour = Integer.parseInt(lecture_time.substring(0, 2));
-                    int startMinute = Integer.parseInt(lecture_time.substring(4, 6));
-                    Log.i("시간 확인", TimeUtil.getInstance().nowHour + "");
                     // 현재 시간 가져오기
                     TimeUtil.getInstance().setTime();
-
                     // 출석 시간보다 이른 시간인 경우
-                    if (Integer.parseInt(TimeUtil.getInstance().nowHour) <= startHour && Integer.parseInt(TimeUtil.getInstance().nowMinute) < startMinute) {
-                        Toast.makeText(HomeActivity.this, "출석 가능 시간이 아닙니다.", Toast.LENGTH_SHORT).show();
-                    }
-                    // 시작 시간(시)과 현재 시간(시)이 같고, 시작 시간(분) + 10 => 현재 시간(분)일 때 출석
-                    else if (Integer.parseInt(TimeUtil.getInstance().nowHour) == startHour
-                            && Integer.parseInt(TimeUtil.getInstance().nowMinute) <= startMinute + 10) {
-                        Log.i("확인", "else if 1");
-                        callNetChangeState(TimeUtil.getInstance().nowDate, AccountManage.getInstance().student_id, resLectureList.getBody().get(position).getLecture_code(), "출석");
-                    }
-                    // 10초과 15분 이하로 출석했을 때 지각
-                    else if (Integer.parseInt(TimeUtil.getInstance().nowHour) == startHour
-                            && Integer.parseInt(TimeUtil.getInstance().nowMinute) > startMinute + 10
-                            && Integer.parseInt(TimeUtil.getInstance().nowMinute) <= startMinute + 15) {
+                    int possibleTime = TimeUtil.getInstance().possibleAtt(lecture_time, TimeUtil.getInstance().nowHour, TimeUtil.getInstance().nowMinute);
+                    if (possibleTime == 1) {
                         Log.i("확인", "else if 2");
-                        callNetChangeState(TimeUtil.getInstance().nowDate, AccountManage.getInstance().student_id, resLectureList.getBody().get(position).getLecture_code(), "지각");
-                    }
-                    // 나머지 결석
-                    else {
-                        Log.i("확인", "else if 3");
-                        callNetChangeState(TimeUtil.getInstance().nowDate, AccountManage.getInstance().student_id, resLectureList.getBody().get(position).getLecture_code(), "결석");
+                        Toast.makeText(HomeActivity.this, "출석 가능 시간이 아닙니다.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        btn_lecture_info.setEnabled(false);
+                        callNetChangeState(TimeUtil.getInstance().nowDate, AccountManage.getInstance().student_id, resLectureList.getBody().get(position).getLecture_code(), lecture_time);
                     }
                 }
             });
@@ -241,7 +210,24 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    public void callNetChangeState(String date, String student_id, String lecture_code, String state) {
+    public void callNetChangeState(String date, String student_id, String lecture_code, String lecture_time) {
+        String state = null;
+        int possibleTime = TimeUtil.getInstance().possibleAtt(lecture_time, TimeUtil.getInstance().nowHour, TimeUtil.getInstance().nowMinute);
+        if (possibleTime == 1) {
+        }
+        // 시작 시간(시)과 현재 시간(시)이 같고, 시작 시간(분) + 10 => 현재 시간(분)일 때 출석
+        else if (possibleTime == 2) {
+            state = "출석";
+        }
+        // 10초과 15분 이하로 출석했을 때 지각
+        else if (possibleTime == 3) {
+            state = "지각";
+        }
+        // 나머지 결석
+        else if (possibleTime == 4) {
+            state = "결석";
+        }
+
         ReqHeader reqHeader = new ReqHeader(
                 "changestate"
         );
@@ -265,6 +251,7 @@ public class HomeActivity extends AppCompatActivity {
                             // 다시 리스트 초기화
                             callNetLectureList();
                         }
+                        btn_lecture_info.setEnabled(true);
                     } else {
                         // 결과값 없음
                         Log.i("RES NULL", response.message().toString());

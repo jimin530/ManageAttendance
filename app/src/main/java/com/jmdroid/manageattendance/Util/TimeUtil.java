@@ -1,5 +1,7 @@
 package com.jmdroid.manageattendance.Util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -46,6 +48,36 @@ public class TimeUtil {
             return true;
         }
         return false;
+    }
+
+    public int possibleAtt(String lecture_time, String nowHour, String nowMinute) {
+        int startHour = Integer.parseInt(lecture_time.substring(0, 2));
+        int startMinute = Integer.parseInt(lecture_time.substring(4, 6));
+
+        Date f_lecture_time = null;
+        Date f_now_time = null;
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm");
+        try {
+            f_lecture_time = dateFormat.parse(startHour + ":" + startMinute);
+            f_now_time = dateFormat.parse(nowHour + ":" + nowMinute);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        long compareTime = f_lecture_time.getTime() - f_now_time.getTime();
+        if (compareTime > 0.0) {
+            // 출석 가능 전
+            return 1;
+        } else if (compareTime <= 0.0 && compareTime >= -600000.0) {
+            // 출석 가능
+            return 2;
+        } else if (compareTime < -600000.0 && compareTime >= -900000.0) {
+            // 지각
+            return 3;
+        } else {
+            // 결석
+            return 4;
+        }
     }
 }
 
