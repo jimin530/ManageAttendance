@@ -16,8 +16,17 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="676bdabdc5f54ea4f66c23ec2d062eb429e35108">
+        sha1="f82d0e000bbf1ec81badeb1b8fcfaa47efd3a405">
         <dex dex="/Users/jimin/Project/Android/ManageAttendance/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_925f81b90bc26d01142152cda0001887388d819f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jimin/.android/build-cache/d54e74034378eb74827846eb26d42d0f7d16f9a9/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="6614f40086863eefe8361a77d4eeed096a006f28">
+        <dex dex="/Users/jimin/Project/Android/ManageAttendance/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_080abc15abf887e08250a1b3fd8e20c5b099bc4a/classes.dex" />
     </item>
 
 </items>
