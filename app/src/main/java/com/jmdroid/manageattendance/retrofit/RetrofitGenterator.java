@@ -10,9 +10,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitGenterator {
     private static RetrofitGenterator ourInstance = new RetrofitGenterator();
+
     public static RetrofitGenterator getInstance() {
         return ourInstance;
     }
+
     private RetrofitGenterator() {
     }
 
@@ -23,6 +25,7 @@ public class RetrofitGenterator {
     public Retrofit getRetrofit() {
         return retrofit;
     }
+
     public void launch_retrofit(Context context) {
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -31,8 +34,9 @@ public class RetrofitGenterator {
     }
 
     RetrofitImpFactory retrofitImpFactory;
+
     public RetrofitImpFactory getRetrofitImpFactory() {
-        if( retrofitImpFactory == null ){
+        if (retrofitImpFactory == null) {
             retrofitImpFactory = retrofit.create(RetrofitImpFactory.class);
         }
         return retrofitImpFactory;

@@ -6,7 +6,8 @@ public class ReqSignup {
     ReqHeader header;
     SignupDTO body;
 
-    public ReqSignup(){}
+    public ReqSignup() {
+    }
 
     public ReqSignup(ReqHeader header, SignupDTO body) {
         this.header = header;

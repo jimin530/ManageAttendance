@@ -1,7 +1,6 @@
 package com.jmdroid.manageattendance.network.resmodel;
 
-public class ResHeader
-{
+public class ResHeader {
     int code;
     String msg;
 

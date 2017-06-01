@@ -30,7 +30,8 @@
                 <TextView
                     android:id="@+id/tv_lecture_name"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:textAlignment="center" />
             </LinearLayout>
 
             <ImageView
@@ -48,7 +49,8 @@
                     android:id="@+id/tv_teacher_name"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:textAlignment="center" />
 
                 <ImageView
                     android:layout_width="1dp"
@@ -60,7 +62,8 @@
                     android:id="@+id/tv_lecture_time"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="2" />
+                    android:layout_weight="2"
+                    android:textAlignment="center" />
 
                 <ImageView
                     android:layout_width="1dp"
@@ -72,7 +75,8 @@
                     android:id="@+id/tv_att_state"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:textAlignment="center" />
             </LinearLayout>
         </LinearLayout>
 
@@ -82,13 +86,13 @@
             android:background="@color/basic_black" />
 
         <ImageButton
-            android:background="@mipmap/ic_launcher"
             android:id="@+id/btn_lecture_info"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:layout_weight="0" />
+            android:layout_weight="0"
+            android:background="@drawable/btn_lecture_info" />
 
     </LinearLayout>
     <!--구분선-->

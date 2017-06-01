@@ -171,7 +171,8 @@ public class HomeActivity extends RecoActivity implements RECORangingListener {
                     resLectureList.getBody().get(position).getLecture_name(),
                     resLectureList.getBody().get(position).getTeacher_name(),
                     lecture_time,
-                    resLectureList.getBody().get(position).getAtt_state()
+                    resLectureList.getBody().get(position).getAtt_state(),
+                    resLectureList.getBody().get(position).getLecture_code()
             );
         }
 
@@ -202,7 +203,7 @@ public class HomeActivity extends RecoActivity implements RECORangingListener {
             btn_lecture_info = (ImageButton) itemView.findViewById(R.id.btn_lecture_info);
         }
 
-        public void bindOnPost(final int position, final String lecture_name, String teacher_name, final String lecture_time, String att_state) {
+        public void bindOnPost(final int position, final String lecture_name, String teacher_name, final String lecture_time, String att_state, final String lecture_code) {
             // 현재 시간 가져오기
             TimeUtil.getInstance().setTime();
 
@@ -220,7 +221,7 @@ public class HomeActivity extends RecoActivity implements RECORangingListener {
                 @Override
                 public void onClick(View view) {
                     // 제일 먼저 비콘이 있는지 검사
-                    if(BeaconManage.getInstance().isNear(mRangedBeacons, lecture_name)) {
+                    if (BeaconManage.getInstance().isNear(mRangedBeacons, lecture_code)) {
                         //Toast.makeText(HomeActivity.this, resLectureList.getBody().get(position).getBeacon_id(), Toast.LENGTH_SHORT).show();
                         // 현재 시간 가져오기
                         TimeUtil.getInstance().setTime();
@@ -279,17 +280,14 @@ public class HomeActivity extends RecoActivity implements RECORangingListener {
         }
 
         public void bindOnPost(final int position, final String id) {
-            if(id.equals("501/24853")) {
+            if (id.equals("501/24853")) {
                 tv_beacon_id.setText("국어");
-            }
-            else if(id.equals("501/24854")) {
+            } else if (id.equals("501/24854")) {
                 tv_beacon_id.setText("수학");
-            }
-            else if(id.equals("501/24861")) {
+            } else if (id.equals("501/24861")) {
                 tv_beacon_id.setText("영어");
             }
         }
-
     }
 
     public void callNetLectureList() {

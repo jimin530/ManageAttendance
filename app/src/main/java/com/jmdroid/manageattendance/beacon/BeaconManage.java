@@ -14,20 +14,17 @@ public class BeaconManage {
     private BeaconManage() {
     }
 
-    public boolean isNear(ArrayList<RECOBeacon> mRangedBeacons, String lecture_name) {
-        String lecture = "";
-        if (lecture_name.equals("국어")) {
-            lecture = "501/24853";
-        } else if (lecture_name.equals("수학")) {
-            lecture = "501/24854";
-        } else if (lecture_name.equals("영어")) {
-            lecture = "501/24861";
-        }
+    public boolean isNear(ArrayList<RECOBeacon> mRangedBeacons, String lecture_code) {
 
-        for (int i = 0; i < mRangedBeacons.size(); i++) {
-            if ((mRangedBeacons.get(i).getMajor() + "/" + mRangedBeacons.get(i).getMinor()).equals(lecture)) {
-                return true;
+        try {
+            for (int i = 0; i < mRangedBeacons.size(); i++) {
+                if ((mRangedBeacons.get(i).getMajor() + "/" + mRangedBeacons.get(i).getMinor()).equals(lecture_code)) {
+                    return true;
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
 
         return false;

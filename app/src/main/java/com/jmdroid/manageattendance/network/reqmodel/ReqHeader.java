@@ -1,13 +1,13 @@
 package com.jmdroid.manageattendance.network.reqmodel;
 
 
-public class ReqHeader
-{
+public class ReqHeader {
     String code;
 
-    public ReqHeader(){}
+    public ReqHeader() {
+    }
 
-    public ReqHeader(String code){
+    public ReqHeader(String code) {
         this.code = code;
     }
 
